@@ -1,14 +1,14 @@
 # Delicious Exporter
 
-A scrapper for exporting your bookmarks from del.icio.us.
+A script for scraping and exporting your bookmarks from del.icio.us.
 
 ## Background
 
-deli.icio.us is a bookmarking service that went through a series of increasingly less fortunate acquisitions. As of January 1st, 2017, the website is frequently down, yet doesn't allow users to export their bookmarks. It also no longer offers an API, and prohibits anyone from content scraping.
+deli.icio.us is a bookmarking service that went through a series of increasingly less fortunate acquisitions. As of January 1st, 2017, the website is frequently down, yet doesn't allow users to export their bookmarks. At the same time, it no longer offers an API, and prohibits anyone from content scraping.
 
-This is deeply unsettling, since many users have used del.icio.us to store thousands of bookmarks, capturing years of internet browsing history.
+That's deeply unsettling, since many users have used del.icio.us to store thousands of bookmarks, capturing years of internet browsing history.
 
-Delicious Exporter allows users to export their content to [HTML bookmarks](https://msdn.microsoft.com/en-us/library/aa753582.aspx) file, in a format accepted by major browsers. It will preserve tags and dates. Additional option enables validation and skipping of dead URLs.
+This script allows users to export their content to [HTML bookmarks](https://msdn.microsoft.com/en-us/library/aa753582.aspx "Netscape Bookmark File Format") file, in the format accepted by major browsers. It will preserve tags and dates. Additional option enables validation and skipping of dead URLs.
 
 
 ## Requirements
@@ -19,23 +19,24 @@ Delicious Exporter allows users to export their content to [HTML bookmarks](http
 
 ## Usage
 
-### Basic usage:
+### Export all links:
 
 `./export.rb -u USERNAME -o bookmarks.html`
 
-`USERNAME` is delicious user name. `bookmarks.html` is the output file, where the bookmarks will be saved.
+`USERNAME` the name of del.icio.us user whose bookmarks will be exported. `bookmarks.html` is the output file, where the bookmarks will be saved.
 
-This will export all public links from selected del.icio.us account, including dead ones. This may take few minutes, depending on the number of bookmarks in your account.
+The above command will export all public links from selected del.icio.us account, including dead ones. This may take few minutes, depending on the number of links.
 
-### Export with links validation
+### Export only valid links
 
 `./export.rb -u USERNAME -o bookmarks.html --validate`
 
 When you provide `--validate` option, the script will try to fix or skip dead links:
+
 1. If the server doesn't respond within 5 seconds, the link will be skipped.
 2. If the server sends a redirect header, the script will follow it and save the target URL.
 
-This mode is much slower and can take about 2 minutes for every hundred of links.
+This mode is much slower and can take about 2 minutes for every hundred links.
 
 ## License
 
