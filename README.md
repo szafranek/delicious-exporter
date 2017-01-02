@@ -4,7 +4,7 @@ A script for scraping and exporting your bookmarks from del.icio.us.
 
 ## Background
 
-deli.icio.us is a bookmarking service that went through a series of increasingly less fortunate acquisitions. As of January 1st, 2017, the website is frequently down, yet doesn't allow users to export their bookmarks. At the same time, it no longer offers an API, and prohibits anyone from content scraping.
+deli.icio.us is a bookmarking service that went through a series of increasingly more unfortunate acquisitions. As of January 1st, 2017, the website is frequently down, yet doesn't allow users to export their bookmarks. At the same time, it no longer offers an API, and prohibits anyone from content scraping.
 
 That's deeply unsettling, since many users have used del.icio.us to store thousands of bookmarks, capturing years of internet browsing history.
 
