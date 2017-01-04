@@ -14,7 +14,7 @@ This script allows users to export their content to [HTML bookmarks](https://msd
 ## Requirements
 
 * Ruby
-* nokogiri (`gem install nokogiri`)
+* nokogiri gem. Check nokogiri documentation for [installation instructions](http://www.nokogiri.org/tutorials/installing_nokogiri.html).
 * curl
 
 ## Usage
