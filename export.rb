@@ -14,7 +14,7 @@ def parse_options
   opt_parser = OptionParser.new do |opts|
     opts.summary_width = 42
 
-    opts.banner = "Usage: export.rb -u DELICIOUS_USERNAME -o OUTPUT_FILE"
+    opts.banner = "Usage: ruby #{File.basename(__FILE__)} -u DELICIOUS_USERNAME -o OUTPUT_FILE"
 
     opts.on("-u", "--username DELICIOUS_USERNAME", "Delicious username") do |u|
       options[:username] = u
@@ -34,7 +34,7 @@ def parse_options
 
     opts.on_tail("-h", "--help", "Show this message") do
       puts opts
-      puts "Example: export.rb -u johndoe -o bookmarks.html"
+      puts "Example: ruby #{File.basename(__FILE__)} -u johndoe -o bookmarks.html"
       exit
     end
   end
@@ -102,34 +102,33 @@ end
 
 def bookmarks_string
   items_string = ""
-  Dir.mktmpdir { |dir|
-    page_count = page_count()
-    download_pages(dir, page_count)
-    for n in 1..page_count
-    	page = Nokogiri::HTML(open("#{dir}/page-#{n}.html"))
-    	elements = page.css(".articleThumbBlockOuter")
-    	for el in elements
-    		url = url(el)
-        if $options[:validate]
+  tmpdir = Dir.mktmpdir
+  page_count = page_count()
+  download_pages(tmpdir, page_count)
+  for n in 1..page_count
+  	page = Nokogiri::HTML(open("#{tmpdir}/page-#{n}.html"))
+  	elements = page.css(".articleThumbBlockOuter")
+  	for el in elements
+  		url = url(el)
+      if $options[:validate]
+        status = http_status(url)
+        if status.start_with?("HTTP/1.1 301", "HTTP/1.1 302", "HTTP/1.1 307")
+          url = effective_url(url)
           status = http_status(url)
-          if status.start_with?("HTTP/1.1 301", "HTTP/1.1 302", "HTTP/1.1 307")
-            url = effective_url(url)
-            status = http_status(url)
-          end
-          if status.empty?
-            status = "Server not found"
-            puts "\e[31m#{status}\e[0m | #{url}"
-            next
-          end
-          unless $options[:silent]
-            puts "#{status} | #{url}"
-          end
         end
-        items_string << element_string(url, el)
-    	end
-    end
-  }
-  items_string
+        if status.empty?
+          status = "Server not found"
+          puts "\e[31m#{status}\e[0m | #{url}"
+          next
+        end
+        unless $options[:silent]
+          puts "#{status} | #{url}"
+        end
+      end
+      items_string << element_string(url, el)
+  	end
+  end
+  FileUtils.remove_entry(tmpdir)
   
   result = <<-EOT
   <!DOCTYPE NETSCAPE-Bookmark-file-1>
