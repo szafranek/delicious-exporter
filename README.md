@@ -19,13 +19,19 @@ This script allows users to export their content to [HTML bookmarks](https://msd
 
 ## Usage
 
-### Export all links:
+### Export all public links
 
 `./export.rb -u USERNAME -o bookmarks.html`
 
 `USERNAME` the name of del.icio.us user whose bookmarks will be exported. `bookmarks.html` is the output file, where the bookmarks will be saved.
 
 The above command will export all public links from selected del.icio.us account, including dead ones. This may take few minutes, depending on the number of links.
+
+### Export all links, including private:
+
+`./export.rb -u USERNAME -p PASSWORD -o bookmarks.html`
+
+If you provide a password, the script will attempt to login on your behalf and export all links, including those marked as private. To make it easier to identify private links later, the script adds a special tag to them: *___private*.
 
 ### Export only valid links
 
