@@ -108,7 +108,7 @@ def page_count(tmpdir, cookie_file)
   page = "#{tmpdir}/home.html"
   query = cookify_query("curl -s 'https://del.icio.us/#{username}' -o '#{page}'", cookie_file)
   `#{query}`
-  user_page = Nokogiri::HTML(File.open(page))
+  user_page = Nokogiri::HTML(File.read(page))
   link_count = user_page.css(".profileMidpanel h1 span:last-child").text.to_i
 	pages = (link_count.to_f / 10).ceil.to_i
 	puts "#{link_count} links, #{pages} pages to download"
@@ -142,7 +142,7 @@ def bookmarks_string
   page_count = page_count(tmpdir, cookie_file)
   download_pages(tmpdir, cookie_file, page_count)
   for n in 1..page_count
-  	page = Nokogiri::HTML(open("#{tmpdir}/page-#{n}.html"))
+  	page = Nokogiri::HTML(File.read("#{tmpdir}/page-#{n}.html"))
   	elements = page.css(".articleThumbBlockOuter")
   	for el in elements
   		url = url(el)
