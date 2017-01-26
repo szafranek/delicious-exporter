@@ -58,6 +58,14 @@ def parse_options
   options
 end
 
+def check_status(status, query)
+  if !status.success?
+    puts "Error executing query:\n#{query}"
+    puts caller
+    exit
+  end
+end
+
 def http_status(url)
   `curl -Is --connect-timeout 5 '#{url}' | head -n 1`.chomp
 end
@@ -74,16 +82,18 @@ def element_string(url, el)
   title = el.css("h3 a.title").text
   add_date = Time.strptime(el["date"], "%s").to_i
   tags = el.css(".tagName a").map{ |a| a.text }
-	unless el.css("li.privateText").empty?
-		tags << "___private"
-	end
-	tags_str = tags.join(",")
+  unless el.css("li.privateText").empty?
+    tags << "___private"
+  end
+  tags_str = tags.join(",")
   %Q(<DT><A HREF="#{url}" ADD_DATE="#{add_date}" LAST_VISIT="#{add_date}" LAST_MODIFIED="#{add_date}" TAGS="#{tags_str}">#{title}</A>\n)
 end
 
 def login(tmpdir, username, password)
   cookie_file = "#{tmpdir}/cookie.txt"
-  response_str = `curl -s -c #{cookie_file} -d "username=#{username}" -d "password=#{password}" "https://del.icio.us/login"`
+  query = %Q{curl -s -c #{cookie_file} -d "username=#{username}" -d "password=#{password}" "https://del.icio.us/login"}
+  response_str = `#{query}`
+  check_status($?, query)
   response = JSON.parse(response_str)
   unless response["error_msgs"].empty?
     puts response["error_msgs"].join("\n")
@@ -92,7 +102,7 @@ def login(tmpdir, username, password)
   cookie_name, cookie_value = response["session"].to_s.split("=", 2)
   cookie_time = (Time.now + (60*60*24*365)).to_i
   # Setting a cookie that del.icio.us sets via JavaScript
-	File.open(cookie_file, "a") { |f|
+  File.open(cookie_file, "a") { |f|
     f << "del.icio.us	TRUE	/	FALSE	#{cookie_time}	#{cookie_name}	#{cookie_value}\n"
   }
   cookie_file
@@ -108,10 +118,11 @@ def page_count(tmpdir, cookie_file)
   page = "#{tmpdir}/home.html"
   query = cookify_query("curl -s 'https://del.icio.us/#{username}' -o '#{page}'", cookie_file)
   `#{query}`
+  check_status($?, query)
   user_page = Nokogiri::HTML(File.read(page))
   link_count = user_page.css(".profileMidpanel h1 span:last-child").text.to_i
-	pages = (link_count.to_f / 10).ceil.to_i
-	puts "#{link_count} links, #{pages} pages to download"
+  pages = (link_count.to_f / 10).ceil.to_i
+  puts "#{link_count} links, #{pages} pages to download"
   pages
 end
 
@@ -129,6 +140,7 @@ def download_pages(dir, cookie_file, page_count)
   end
   query = cookify_query("curl -s 'https://del.icio.us/#{username}?&page=#{pages}' -o '#{dir}/page-#{current_page}.html'", cookie_file)
   `#{query}`
+  check_status($?, query)
 end
 
 def print_status(status)
@@ -142,10 +154,10 @@ def bookmarks_string
   page_count = page_count(tmpdir, cookie_file)
   download_pages(tmpdir, cookie_file, page_count)
   for n in 1..page_count
-  	page = Nokogiri::HTML(File.read("#{tmpdir}/page-#{n}.html"))
-  	elements = page.css(".articleThumbBlockOuter")
-  	for el in elements
-  		url = url(el)
+    page = Nokogiri::HTML(File.read("#{tmpdir}/page-#{n}.html"))
+    elements = page.css(".articleThumbBlockOuter")
+    for el in elements
+      url = url(el)
       if $options[:validate]
         status = http_status(url)
         if status.start_with?("HTTP/1.1 301", "HTTP/1.1 302", "HTTP/1.1 307")
@@ -162,7 +174,7 @@ def bookmarks_string
         end
       end
       items_string << element_string(url, el)
-  	end
+    end
   end
   FileUtils.remove_entry(tmpdir)
   
