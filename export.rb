@@ -109,14 +109,14 @@ def login(tmpdir, username, password)
 end
 
 def cookify_query(query, cookie_file)
-    query << (cookie_file ? " -b '#{cookie_file}'" : "")
+    query << (cookie_file ? %Q{ -b "#{cookie_file}"} : "")
     query
 end
 
 def page_count(tmpdir, cookie_file)
   username = $options[:username]
   page = "#{tmpdir}/home.html"
-  query = cookify_query("curl -s 'https://del.icio.us/#{username}' -o '#{page}'", cookie_file)
+  query = cookify_query(%Q{curl -s "https://del.icio.us/#{username}" -o "#{page}"}, cookie_file)
   `#{query}`
   check_status($?, query)
   user_page = Nokogiri::HTML(File.read(page))
@@ -138,7 +138,7 @@ def download_pages(dir, cookie_file, page_count)
     pages = "1"
     current_page = "1"
   end
-  query = cookify_query("curl -s 'https://del.icio.us/#{username}?&page=#{pages}' -o '#{dir}/page-#{current_page}.html'", cookie_file)
+  query = cookify_query(%Q{curl -s "https://del.icio.us/#{username}?&page=#{pages}" -o "#{dir}/page-#{current_page}.html"}, cookie_file)
   `#{query}`
   check_status($?, query)
 end
@@ -195,7 +195,7 @@ end
 
 def save(string)
   file = $options[:output_file]
-  File.open(file, 'w') { |f| f.write(string) }
+  File.open(file, "w") { |f| f.write(string) }
   unless $options[:silent]
     puts "#{file} saved"
   end
