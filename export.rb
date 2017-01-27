@@ -81,12 +81,17 @@ end
 def element_string(url, el)
   title = el.css("h3 a.title").text
   add_date = Time.strptime(el["date"], "%s").to_i
+  description = el.css(".thumbTBriefTxt p")
+  description_content = description.map(&:text).reject(&:empty?).join(" ")
+  unless description_content.empty?
+    description_str = "\n<DD>#{description_content}"
+  end
   tags = el.css(".tagName a").map{ |a| a.text }
   unless el.css("li.privateText").empty?
     tags << "___private"
   end
   tags_str = tags.join(",")
-  %Q(<DT><A HREF="#{url}" ADD_DATE="#{add_date}" LAST_VISIT="#{add_date}" LAST_MODIFIED="#{add_date}" TAGS="#{tags_str}">#{title}</A>\n)
+  %Q(<DT><A HREF="#{url}" ADD_DATE="#{add_date}" LAST_VISIT="#{add_date}" LAST_MODIFIED="#{add_date}" TAGS="#{tags_str}">#{title}</A>#{description_str}\n)
 end
 
 def login(tmpdir, username, password)
