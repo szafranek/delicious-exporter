@@ -29,9 +29,11 @@ The above command will export all public links from selected del.icio.us account
 
 ### Export all links, including private:
 
-`./export.rb -u USERNAME -p PASSWORD -o bookmarks.html`
+`./export.rb -u USERNAME -p 'PASSWORD' -o bookmarks.html`
 
 If you provide a password, the script will attempt to login on your behalf and export all links, including those marked as private. To make it easier to identify private links later, the script adds a special tag to them: *___private*.
+
+Don't forget to enclose the password in single quotes if it contains any characters that may confuse your shell.
 
 ### Export only valid links
 

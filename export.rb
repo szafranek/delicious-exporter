@@ -20,7 +20,7 @@ def parse_options
       options[:username] = u
     end
     
-    opts.on("-p", "--password DELICIOUS_PASSWORD", "Delicious password. If you don't provide it, only public bookmarks will be exported.") do |p|
+    opts.on("-p", "--password 'DELICIOUS_PASSWORD'", "Delicious password, in single quotes. If you don't provide it, only public bookmarks will be exported.") do |p|
       options[:password] = p
     end
   
@@ -96,7 +96,7 @@ end
 
 def login(tmpdir, username, password)
   cookie_file = "#{tmpdir}/cookie.txt"
-  query = %Q{curl -s -c #{cookie_file} -d "username=#{username}" -d "password=#{password}" "https://del.icio.us/login"}
+  query = %Q{curl -s -c #{cookie_file} -d 'username=#{username}' --data-urlencode 'password=#{password}' "https://del.icio.us/login"}
   response_str = `#{query}`
   check_status($?, query)
   response = JSON.parse(response_str)
