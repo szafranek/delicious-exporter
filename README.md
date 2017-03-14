@@ -40,7 +40,8 @@ If you provide a password, the script will attempt to login on your behalf and e
 When you provide the `--validate` option, the script will try to fix or skip dead links:
 
 1. If the server doesn't respond within 5 seconds, the link will be skipped.
-2. If the server sends a redirect header, the script will follow it and save the target URL.
+2. If the server responds with a transient error (timeout or 5xx error) the script will retry up to 3 times, then skip the link.
+3. If the server sends a redirect header, the script will follow it and save the target URL.
 
 This mode is much slower and can take about 2 minutes for every hundred links.
 

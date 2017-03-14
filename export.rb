@@ -67,7 +67,7 @@ def check_status(status, query)
 end
 
 def http_status(url)
-  `curl -Is --connect-timeout 5 '#{url}' | head -n 1`.chomp
+  `curl -Is --connect-timeout 5 --retry 3 '#{url}' | head -n 1`.chomp
 end
 
 def url(el)
