@@ -47,6 +47,18 @@ When you provide the `--validate` option, the script will try to fix or skip dea
 
 This mode is much slower and can take about 2 minutes for every hundred links.
 
+### Proxy servers
+
+If you are behind a proxy and the script doesn't work correctly, set up following environmental variables before running the script:
+
+```export http_proxy http://proxy.server:3128
+export https_proxy=https://proxy.server:6443```
+
+Replace `proxy.server` and the port number if information about your proxy server.
+
+If you don't use the `--validate` flag, only `https_proxy` variable is necessary.
+
+
 ## License
 
 The script is available under provisions of the [public domain license](https://creativecommons.org/publicdomain/zero/1.0/). You are free to copy and modify it without asking for author's permission. The author doesn't provide any warranty or support.
