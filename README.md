@@ -52,7 +52,8 @@ This mode is much slower and can take about 2 minutes for every hundred links.
 If you are behind a proxy and the script doesn't work correctly, set up following environmental variables before running the script:
 
 ```export http_proxy http://proxy.server:3128
-export https_proxy=https://proxy.server:6443```
+export https_proxy=https://proxy.server:6443
+```
 
 Replace `proxy.server` and the port number if information about your proxy server.
 
