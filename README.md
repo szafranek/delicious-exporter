@@ -1,6 +1,6 @@
 # IMPORTANT
 
-In June 2017 [del.icio.us was bought](https://blog.pinboard.in/2017/06/pinboard_acquires_delicious/) by Maciej Ceglowski, the founder of Pinboard. He restored the export functionality in del.icio.us, so you don't need this script anymore. Please use the built-in [export instead](https://del.icio.us/export).
+In June 2017 [del.icio.us was bought](https://blog.pinboard.in/2017/06/pinboard_acquires_delicious/) by Maciej Ceglowski, the founder of Pinboard. He restored the export functionality in del.icio.us, so you don't need this script anymore. Please use the [built-in export](https://del.icio.us/export) instead.
 
 ---
 
