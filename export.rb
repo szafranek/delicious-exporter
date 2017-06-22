@@ -71,7 +71,10 @@ def http_status(url)
 end
 
 def url(el)
-  el.css(".articleInfoPan a")[0]["href"]
+ el = el.css(".articleInfoPan a");
+ if (!el[0].nil?)
+   url = el[0]["href"]
+ end  
 end
 
 def effective_url(url)
